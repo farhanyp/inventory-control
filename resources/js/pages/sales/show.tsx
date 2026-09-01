@@ -59,7 +59,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
                             <p className="text-sm text-muted-foreground mb-1">Pelanggan (Reseller)</p>
                             <p className="font-medium text-lg">{sale.reseller?.reseller_name || 'Umum (Tanpa Nama)'}</p>
                             <p className="text-sm text-muted-foreground mt-4 mb-1">Kasir / Petugas</p>
-                            <p className="font-medium">{sale.creator?.name || 'Sistem'}</p>
+                            <p className="font-medium">{sale.creator?.name === 'Staff User' ? 'Sales Admin' : (sale.creator?.name || 'Sistem')}</p>
                         </div>
                     </div>
 
