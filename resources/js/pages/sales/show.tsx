@@ -23,15 +23,15 @@ export default function SalesShow({ sale }: SalesShowProps) {
 
     return (
         <>
-            <Head title={`Detail Transaksi - ${sale.transaction_number}`} />
+            <Head title={`Detail Pesanan - ${sale.transaction_number}`} />
             <div className="flex flex-col gap-6 p-6 h-full bg-slate-50/50 dark:bg-transparent overflow-x-auto max-w-4xl mx-auto">
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                             <FileText className="w-6 h-6 text-primary" />
-                            Detail Transaksi
+                            Detail Pesanan
                         </h2>
-                        <p className="text-muted-foreground mt-1">Rincian penjualan dan riwayat pemotongan batch FEFO.</p>
+                        <p className="text-muted-foreground mt-1">Rincian pesanan dan riwayat pemotongan batch FEFO.</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button variant="outline" onClick={() => window.print()} className="gap-2">
@@ -51,13 +51,13 @@ export default function SalesShow({ sale }: SalesShowProps) {
                     {/* Header Struk */}
                     <div className="p-6 md:p-8 border-b flex flex-col md:flex-row justify-between gap-6">
                         <div>
-                            <h1 className="text-3xl font-black text-primary mb-2">INVOICE</h1>
+                            <h1 className="text-3xl font-black text-primary mb-2">SALES ORDER</h1>
                             <p className="font-semibold text-lg">{sale.transaction_number}</p>
                             <p className="text-muted-foreground">{formatDate(sale.transaction_date)}</p>
                         </div>
                         <div className="md:text-right">
                             <p className="text-sm text-muted-foreground mb-1">Pelanggan (Reseller)</p>
-                            <p className="font-medium text-lg">{sale.reseller?.name || 'Umum (Tanpa Nama)'}</p>
+                            <p className="font-medium text-lg">{sale.reseller?.reseller_name || 'Umum (Tanpa Nama)'}</p>
                             <p className="text-sm text-muted-foreground mt-4 mb-1">Kasir / Petugas</p>
                             <p className="font-medium">{sale.creator?.name || 'Sistem'}</p>
                         </div>
@@ -95,24 +95,6 @@ export default function SalesShow({ sale }: SalesShowProps) {
                     </div>
 
                     {/* Footer Summary */}
-                    <div className="p-6 md:p-8 bg-muted/20 flex flex-col items-end gap-3 border-t">
-                        <div className="flex justify-between w-full md:w-1/3">
-                            <span className="text-muted-foreground">Total Tagihan:</span>
-                            <span className="font-bold text-lg">{formatCurrency(sale.total)}</span>
-                        </div>
-                        <div className="flex justify-between w-full md:w-1/3 border-b pb-2">
-                            <span className="text-muted-foreground">Metode Pembayaran:</span>
-                            <span className="font-medium">{sale.payment_method}</span>
-                        </div>
-                        <div className="flex justify-between w-full md:w-1/3">
-                            <span className="text-muted-foreground">Dibayar:</span>
-                            <span className="font-medium">{formatCurrency(sale.paid_amount)}</span>
-                        </div>
-                        <div className="flex justify-between w-full md:w-1/3">
-                            <span className="text-muted-foreground">Kembali:</span>
-                            <span className="font-bold text-green-600">{formatCurrency(sale.change_amount)}</span>
-                        </div>
-                    </div>
                     {sale.description && (
                         <div className="p-6 border-t bg-muted/10">
                             <p className="text-sm font-semibold mb-1">Catatan:</p>

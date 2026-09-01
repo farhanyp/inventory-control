@@ -27,23 +27,23 @@ export default function SalesIndex({ sales, products, resellers }: SalesIndexPro
 
     return (
         <>
-            <Head title="Kasir / Penjualan" />
+            <Head title="Sales Order" />
             <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-6 bg-slate-50/50 dark:bg-transparent">
                 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                             <ShoppingCart className="w-6 h-6 text-primary" />
-                            Riwayat Penjualan
+                            Input Pesanan
                         </h2>
-                        <p className="text-muted-foreground mt-1">Daftar transaksi penjualan yang telah dilakukan.</p>
+                        <p className="text-muted-foreground mt-1">Daftar pesanan atau barang keluar.</p>
                     </div>
                     <Button
                         onClick={() => setIsCreateOpen(true)}
                         className="h-10 px-4 py-2 gap-2"
                     >
                         <Plus className="w-4 h-4" />
-                        Transaksi Baru
+                        Pesanan Baru
                     </Button>
                 </div>
 
@@ -52,11 +52,9 @@ export default function SalesIndex({ sales, products, resellers }: SalesIndexPro
                         <table className="w-full text-sm">
                             <thead className="bg-muted/50">
                                 <tr className="border-b">
-                                    <th className="h-12 px-4 text-left font-medium text-muted-foreground">No. Transaksi</th>
+                                    <th className="h-12 px-4 text-left font-medium text-muted-foreground">No. Pesanan</th>
                                     <th className="h-12 px-4 text-left font-medium text-muted-foreground">Tanggal</th>
                                     <th className="h-12 px-4 text-left font-medium text-muted-foreground">Pelanggan (Reseller)</th>
-                                    <th className="h-12 px-4 text-left font-medium text-muted-foreground">Metode Bayar</th>
-                                    <th className="h-12 px-4 text-right font-medium text-muted-foreground">Total Belanja</th>
                                     <th className="h-12 px-4 text-center font-medium text-muted-foreground">Aksi</th>
                                 </tr>
                             </thead>
@@ -65,13 +63,7 @@ export default function SalesIndex({ sales, products, resellers }: SalesIndexPro
                                     <tr key={item.id} className="border-b transition-colors hover:bg-muted/50 last:border-0">
                                         <td className="p-4 font-medium">{item.transaction_number}</td>
                                         <td className="p-4">{new Date(item.transaction_date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
-                                        <td className="p-4">{item.reseller?.name || '-'}</td>
-                                        <td className="p-4">
-                                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${item.payment_method === 'Cash' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                                                {item.payment_method}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 text-right font-bold text-primary">{formatCurrency(item.total)}</td>
+                                        <td className="p-4">{item.reseller?.reseller_name || '-'}</td>
                                         <td className="p-4 text-center">
                                             <Link
                                                 href={`/sales/${item.id}`}
@@ -85,8 +77,8 @@ export default function SalesIndex({ sales, products, resellers }: SalesIndexPro
                                 ))}
                                 {sales.data.length === 0 && (
                                     <tr>
-                                        <td colSpan={6} className="h-24 text-center text-muted-foreground">
-                                            Belum ada data transaksi penjualan.
+                                        <td colSpan={4} className="h-24 text-center text-muted-foreground">
+                                            Belum ada data pesanan.
                                         </td>
                                     </tr>
                                 )}

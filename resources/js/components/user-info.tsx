@@ -23,7 +23,11 @@ export function UserInfo({
                 <span className="truncate font-medium">{user.name}</span>
                 {user.roles && Array.isArray(user.roles) && user.roles.length > 0 && (
                     <span className="truncate text-xs text-muted-foreground capitalize">
-                        {((user.roles[0] as any).name as string).toUpperCase() === 'MANAGEMENT' ? 'Pimpinan' : ((user.roles[0] as any).name as string)}
+                        {String((user.roles[0] as any).name).toUpperCase() === 'MANAGEMENT' 
+                            ? 'Pimpinan' 
+                            : String((user.roles[0] as any).name).toUpperCase() === 'STAFF' 
+                                ? 'Sales Admin' 
+                                : String((user.roles[0] as any).name)}
                     </span>
                 )}
                 {showEmail && (

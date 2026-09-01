@@ -1,5 +1,6 @@
 import type { User } from './auth';
 import type { Product } from './product';
+import type { Reseller } from './reseller';
 
 export interface SalesDetail {
     id: number;
@@ -27,5 +28,6 @@ export interface Sales {
     created_by: string;
     created_at: string;
     creator?: User;
+    reseller?: Reseller;
     details?: SalesDetail[];
 }

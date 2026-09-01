@@ -64,7 +64,7 @@ const navGroups: NavGroup[] = [
         ]
     },
     {
-        title: 'Transaksi & Stok',
+        title: 'Stok & Pesanan',
         items: [
             {
                 title: 'Barang Masuk',
@@ -79,7 +79,7 @@ const navGroups: NavGroup[] = [
                 roles: ['MANAGEMENT', 'ADMIN'],
             },
             {
-                title: 'Penjualan',
+                title: 'Barang Keluar',
                 href: '/sales',
                 icon: ShoppingCart,
                 roles: ['MANAGEMENT', 'STAFF'],

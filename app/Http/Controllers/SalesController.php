@@ -177,7 +177,7 @@ class SalesController extends Controller
 
     public function show(Sales $sale)
     {
-        $sale->load(['details.product', 'creator']);
+        $sale->load(['details.product', 'creator', 'reseller']);
         return Inertia::render('sales/show', [
             'sale' => $sale,
         ]);

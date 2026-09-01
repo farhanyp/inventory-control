@@ -18,7 +18,7 @@ interface CreateDialogProps {
 export function CreateDialog({ open, onOpenChange, products, resellers }: CreateDialogProps) {
     const todayDate = new Date().toISOString().split('T')[0];
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, transform } = useForm({
         transaction_date: todayDate,
         customer_name: '',
         payment_method: 'Cash' as 'Cash' | 'Transfer',
@@ -26,6 +26,12 @@ export function CreateDialog({ open, onOpenChange, products, resellers }: Create
         description: '',
         items: [] as { product_id: number; quantity: number; selling_price: number; product_name: string; total_stock: number }[],
     });
+
+    transform((data) => ({
+        ...data,
+        paid_amount: data.items.reduce((sum, item) => sum + (item.selling_price * item.quantity), 0).toString(),
+        payment_method: 'Cash',
+    }));
 
     const [selectedProductId, setSelectedProductId] = useState<string>('');
     const [inputQty, setInputQty] = useState<string>('1');
@@ -119,12 +125,6 @@ export function CreateDialog({ open, onOpenChange, products, resellers }: Create
             return;
         }
 
-        const paid = parseFloat(data.paid_amount) || 0;
-        if (paid < overallTotal) {
-            setErrorMsg('Jumlah uang bayar kurang dari total tagihan!');
-            return;
-        }
-
         post('/sales', {
             onSuccess: () => {
                 onOpenChange(false);
@@ -143,10 +143,10 @@ export function CreateDialog({ open, onOpenChange, products, resellers }: Create
                     <div>
                         <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight">
                             <ShoppingBag className="w-6 h-6 text-primary" />
-                            Kasir Baru
+                            Pesanan Baru
                         </h2>
                         <p className="text-muted-foreground mt-1 text-sm">
-                            Buat transaksi penjualan baru. Sistem menggunakan algoritma FEFO untuk memotong stok.
+                            Buat pesanan atau barang keluar baru. Sistem menggunakan algoritma FEFO untuk memotong stok.
                         </p>
                     </div>
                     <button
@@ -271,47 +271,8 @@ export function CreateDialog({ open, onOpenChange, products, resellers }: Create
 
                     {/* Right Panel: Payment & Summary */}
                     <div className="w-full md:w-80 border-l bg-card flex flex-col overflow-y-auto">
-                        <div className="bg-primary p-6 text-primary-foreground text-right shrink-0">
-                            <p className="text-sm font-medium text-primary-foreground/80 mb-1">Total Tagihan</p>
-                            <h2 className="text-3xl font-bold tracking-tighter truncate" title={formatCurrency(overallTotal)}>{formatCurrency(overallTotal)}</h2>
-                        </div>
-                        <div className="p-6 flex flex-col gap-5 shrink-0">
-                            <div className="space-y-2">
-                                <Label>Metode Pembayaran</Label>
-                                <Select value={data.payment_method} onValueChange={(val: any) => setData('payment_method', val)}>
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Cash">Cash (Tunai)</SelectItem>
-                                        <SelectItem value="Transfer">Transfer Bank</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Nominal Uang Bayar <span className="text-destructive">*</span></Label>
-                                <Input
-                                    type="text"
-                                    value={data.paid_amount ? formatNumber(data.paid_amount) : ''}
-                                    onChange={(e) => {
-                                        const rawValue = e.target.value.replace(/\D/g, '');
-                                        setData('paid_amount', rawValue);
-                                    }}
-                                    required
-                                    className="text-right text-lg font-bold h-12"
-                                    placeholder="0"
-                                />
-                                {errors.paid_amount && <p className="text-sm text-destructive">{errors.paid_amount}</p>}
-                            </div>
-
-                            <div className="rounded-lg bg-muted p-4 flex justify-between items-center border">
-                                <span className="font-medium text-muted-foreground">Kembalian</span>
-                                <span className={`text-xl font-bold ${changeAmount < 0 ? 'text-destructive' : 'text-green-600'}`}>
-                                    {formatCurrency(changeAmount < 0 ? 0 : changeAmount)}
-                                </span>
-                            </div>
-
-                            <div className="space-y-2">
+                        <div className="p-6 flex flex-col gap-5 shrink-0 h-full">
+                            <div className="space-y-2 flex-1">
                                 <Label>Keterangan Tambahan</Label>
                                 <Input
                                     value={data.description}
@@ -322,11 +283,11 @@ export function CreateDialog({ open, onOpenChange, products, resellers }: Create
 
                             <Button
                                 type="submit"
-                                className="w-full h-12 text-base gap-2 mt-4 font-semibold"
-                                disabled={processing || data.items.length === 0 || (parseFloat(data.paid_amount) || 0) < overallTotal}
+                                className="w-full h-12 text-base gap-2 mt-auto font-semibold"
+                                disabled={processing || data.items.length === 0}
                             >
                                 <Calculator className="w-5 h-5" />
-                                {processing ? 'Memproses...' : 'Simpan Transaksi'}
+                                {processing ? 'Memproses...' : 'Simpan Pesanan'}
                             </Button>
                         </div>
                     </div>
