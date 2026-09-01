@@ -59,7 +59,7 @@ class ReportController extends Controller
         $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : Carbon::now()->startOfMonth();
         $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : Carbon::now()->endOfDay();
 
-        $sales = Sales::with(['creator', 'reseller'])
+        $sales = Sales::with(['creator', 'reseller', 'details.product'])
             ->whereBetween('transaction_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->orderBy('transaction_date', 'desc')
             ->get();

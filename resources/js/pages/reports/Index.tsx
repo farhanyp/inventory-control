@@ -40,7 +40,7 @@ export default function ReportsIndex() {
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 <Heading
                     title="Modul Laporan"
-                    description="Cetak dokumen laporan stok, barang masuk, penjualan, dan kedaluwarsa."
+                    description="Cetak dokumen laporan stok, barang masuk, barang keluar, dan kedaluwarsa."
                 />
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 mt-4">
@@ -67,8 +67,8 @@ export default function ReportsIndex() {
                     </ReportCard>
 
                     <ReportCard
-                        title="Laporan Penjualan"
-                        description="Menampilkan rekapitulasi transaksi barang keluar atau omset penjualan berdasarkan rentang waktu."
+                        title="Laporan Barang Keluar"
+                        description="Menampilkan rekapitulasi pesanan atau barang keluar berdasarkan rentang waktu."
                         icon={<ShoppingCart className="w-6 h-6" />}
                         requiresDateRange
                     >
